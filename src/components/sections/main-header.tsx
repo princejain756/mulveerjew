@@ -30,7 +30,7 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: M
 export default function MainHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [goldData, setGoldData] = useState<{ rate20k: number | null; rate22k: number | null } | null>(null);
+  const [goldData, setGoldData] = useState<{ rate20k: number | null; rate22k: number | null; rate24k: number | null } | null>(null);
   const [isGoldPopupOpen, setIsGoldPopupOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -206,6 +206,10 @@ export default function MainHeader() {
             </p>
             {goldData && (
               <span className="ml-2 border-l border-[#f6e2c7] pl-2 text-[#f6e2c7] whitespace-nowrap">
+                {goldData.rate24k && (
+                  <span>24K: ₹{goldData.rate24k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
+                )}
+                {goldData.rate24k && goldData.rate22k && <span className="mx-1">•</span>}
                 {goldData.rate22k && (
                   <span>22K: ₹{goldData.rate22k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
                 )}
@@ -249,9 +253,9 @@ export default function MainHeader() {
                     className="w-full rounded-md bg-[#5a1024] px-2 py-2 text-sm font-semibold uppercase tracking-[0.15em] text-white hover:bg-[#6a1424]"
                   >
                     Today's Rate
-                    {goldData?.rate22k && (
+                    {goldData?.rate24k && (
                       <span className="ml-2 text-yellow-300">
-                        ₹{goldData.rate22k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                        ₹{goldData.rate24k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                       </span>
                     )}
                   </button>
