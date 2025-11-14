@@ -28,6 +28,7 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: M
 export default function MainHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [goldData, setGoldData] = useState<{ rate20k: number | null; rate22k: number | null } | null>(null);
 
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
@@ -38,6 +39,24 @@ export default function MainHeader() {
 
   useOnClickOutside(settingsRef, () => setIsSettingsOpen(false));
   useOnClickOutside(mobileMenuRef, () => setIsMobileMenuOpen(false));
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        const res = await fetch("/api/gold-price");
+        if (res.ok) {
+          const json = await res.json();
+          setGoldData({ rate20k: json.rate20k, rate22k: json.rate22k });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchPrice();
+    const interval = setInterval(fetchPrice, 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#5f2130] bg-[#3f0d1c] text-white shadow-sm">
@@ -168,9 +187,22 @@ export default function MainHeader() {
             </div>
           </div>
 
-          <p className="hidden pb-3.5 text-center text-sm tracking-wide text-[#f6e2c7] lg:block">
-            Gold, Silver & Diamond Jewellery · Belagavi · Since 2000
-          </p>
+          <div className="w-full flex items-center justify-center gap-2 pb-2 pt-2 text-xs md:text-sm lg:pb-3.5 lg:pt-3">
+            <p className="text-center tracking-wide text-[#f6e2c7]">
+              Gold, Silver & Diamond Jewellery · Belagavi · Since 2000
+            </p>
+            {goldData && (
+              <span className="ml-2 border-l border-[#f6e2c7] pl-2 text-[#f6e2c7] whitespace-nowrap">
+                {goldData.rate22k && (
+                  <span>22K: ₹{goldData.rate22k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
+                )}
+                {goldData.rate22k && goldData.rate20k && <span className="mx-1">•</span>}
+                {goldData.rate20k && (
+                  <span>20K: ₹{goldData.rate20k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
+                )}
+              </span>
+            )}
+          </div>
 
           {/* Mobile navigation (hamburger menu) */}
           {isMobileMenuOpen && (

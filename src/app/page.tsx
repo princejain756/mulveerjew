@@ -9,7 +9,6 @@ import SignatureCollectionsSection from '@/components/sections/signature-collect
 import CustomDesignsSection from '@/components/sections/custom-designs-section';
 import StoreLocatorSection from '@/components/sections/store-locator-section';
 import Footer from '@/components/sections/footer';
-import GoldPriceTicker from '@/components/GoldPriceTicker';
 import AboutSection from '@/components/AboutSection';
 import InquiryForm from '@/components/InquiryForm';
 
@@ -23,7 +22,6 @@ export default function HomePage() {
       
       <main className="w-full">
         <HeroSlideshow />
-        <GoldPriceTicker />
         <TrustBadges />
         <CollectionShowcase />
         <SignatureCollectionsSection />
