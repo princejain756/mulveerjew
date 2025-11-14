@@ -7,6 +7,8 @@ import { Menu, Search, Settings, Heart, ShoppingBag } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { navLinks } from './main-navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import GoldRatePopup from '@/components/GoldRatePopup';
+import SearchModal from '@/components/SearchModal';
 
 function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: MouseEvent | TouchEvent) => void) {
   useEffect(() => {
@@ -29,6 +31,8 @@ export default function MainHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [goldData, setGoldData] = useState<{ rate20k: number | null; rate22k: number | null } | null>(null);
+  const [isGoldPopupOpen, setIsGoldPopupOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
@@ -59,7 +63,8 @@ export default function MainHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#5f2130] bg-[#3f0d1c] text-white shadow-sm">
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-[#5f2130] bg-[#3f0d1c] text-white shadow-sm">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
         <div className="flex flex-col">
           <div className="flex w-full items-center">
@@ -75,7 +80,11 @@ export default function MainHeader() {
                 >
                   <Menu size={22} />
                 </button>
-                <button className="p-2" aria-label="Search">
+                <button 
+                  className="p-2" 
+                  aria-label="Search"
+                  onClick={() => setIsSearchOpen(true)}
+                >
                   <Search size={20} />
                 </button>
               </div>
@@ -96,9 +105,13 @@ export default function MainHeader() {
 
             {/* Right Side: Icons */}
             <div className="flex flex-1 items-center justify-end space-x-0 md:space-x-1">
-              <a href="#" className="hidden p-2 transition-colors hover:text-accent lg:block" aria-label="Search">
+              <button 
+                className="hidden p-2 transition-colors hover:text-accent lg:block" 
+                aria-label="Search"
+                onClick={() => setIsSearchOpen(true)}
+              >
                 <Search size={20} />
-              </a>
+              </button>
               <div ref={settingsRef} className="relative">
                 <button onClick={() => setIsSettingsOpen(prev => !prev)} className="p-2 transition-colors hover:text-accent" aria-label="Account">
                   <Settings size={20} />
@@ -227,11 +240,30 @@ export default function MainHeader() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <button
+                    onClick={() => {
+                      setIsGoldPopupOpen(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full rounded-md bg-[#5a1024] px-2 py-2 text-sm font-semibold uppercase tracking-[0.15em] text-white hover:bg-[#6a1424]"
+                  >
+                    Today's Rate
+                    {goldData?.rate22k && (
+                      <span className="ml-2 text-yellow-300">
+                        ₹{goldData.rate22k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                      </span>
+                    )}
+                  </button>
+                </li>
               </ul>
             </nav>
           )}
         </div>
       </div>
     </header>
+    <GoldRatePopup isOpen={isGoldPopupOpen} onClose={() => setIsGoldPopupOpen(false)} />
+    <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+    </>
   );
 }
