@@ -59,31 +59,37 @@ export async function upsertGoldRate(
   rate22k: number | null,
 ): Promise<void> {
   try {
+    // Use rate_22k as price_per_gram_inr, or rate_20k if 22k is not set, or 0 as fallback
+    const pricePerGram = rate22k ?? rate20k ?? 0;
+    
     // Keep only one row (id = 1) and update both rates
     await query(
       `
-        INSERT INTO gold_rates (id, rate_20k, rate_22k)
-        VALUES (1, ?, ?)
+        INSERT INTO gold_rates (id, price_per_gram_inr, rate_20k, rate_22k)
+        VALUES (1, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
+          price_per_gram_inr = VALUES(price_per_gram_inr),
           rate_20k = VALUES(rate_20k),
           rate_22k = VALUES(rate_22k),
           updated_at = CURRENT_TIMESTAMP
       `,
-      [rate20k, rate22k],
+      [pricePerGram, rate20k, rate22k],
     );
   } catch (error: any) {
     if (error && error.code === 'ER_NO_SUCH_TABLE') {
       await ensureGoldRatesTableExists();
+      const pricePerGram = rate22k ?? rate20k ?? 0;
       await query(
         `
-          INSERT INTO gold_rates (id, rate_20k, rate_22k)
-          VALUES (1, ?, ?)
+          INSERT INTO gold_rates (id, price_per_gram_inr, rate_20k, rate_22k)
+          VALUES (1, ?, ?, ?)
           ON DUPLICATE KEY UPDATE
+            price_per_gram_inr = VALUES(price_per_gram_inr),
             rate_20k = VALUES(rate_20k),
             rate_22k = VALUES(rate_22k),
             updated_at = CURRENT_TIMESTAMP
         `,
-        [rate20k, rate22k],
+        [pricePerGram, rate20k, rate22k],
       );
       return;
     }

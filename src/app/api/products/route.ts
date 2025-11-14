@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       SELECT p.*, c.name as category_name
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
-      WHERE p.is_active = true
+      WHERE p.is_active = 1
     `;
     const params: any[] = [];
 
@@ -43,7 +43,9 @@ export async function GET(request: NextRequest) {
     sql += ' ORDER BY p.created_at DESC LIMIT ? OFFSET ?';
     params.push(limit, offset);
 
-    const [products] = await query(sql, params);
+    console.log("SQL:", sql);
+    console.log("Params:", params, "Length:", params.length);
+    const products = await query(sql, params);
 
     return NextResponse.json({ products });
 

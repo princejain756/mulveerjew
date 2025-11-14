@@ -8,8 +8,8 @@ export const dbConfig = {
   database: process.env.DB_NAME || 'mulveer_jewellers',
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
   connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000,
+  waitForConnections: true,
+  queueLimit: 0,
 };
 
 // Create connection pool
@@ -26,7 +26,8 @@ export function getPool(): mysql.Pool {
 export async function query(sql: string, params: any[] = []): Promise<any> {
   const connection = await getPool().getConnection();
   try {
-    const [rows] = await connection.execute(sql, params);
+    // Use query() instead of execute() for better compatibility
+    const [rows] = await connection.query(sql, params);
     return rows;
   } finally {
     connection.release();
