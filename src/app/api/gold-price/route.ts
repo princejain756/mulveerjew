@@ -8,12 +8,14 @@ export async function GET() {
     if (
       !rate ||
       ((rate.rate_20k === null || rate.rate_20k === undefined) &&
-        (rate.rate_22k === null || rate.rate_22k === undefined))
+        (rate.rate_22k === null || rate.rate_22k === undefined) &&
+        (rate.rate_24k === null || rate.rate_24k === undefined))
     ) {
       return NextResponse.json(
         {
           rate20k: null,
           rate22k: null,
+          rate24k: null,
           currency: 'INR',
           isDemo: true,
           message: 'Gold rate not yet set in admin panel.',
@@ -32,6 +34,10 @@ export async function GET() {
           rate.rate_22k !== null && rate.rate_22k !== undefined
             ? rate.rate_22k
             : null,
+        rate24k:
+          rate.rate_24k !== null && rate.rate_24k !== undefined
+            ? rate.rate_24k
+            : null,
         currency: 'INR',
         isDemo: false,
         updatedAt: rate.updated_at.toISOString(),
@@ -44,6 +50,7 @@ export async function GET() {
       {
         rate20k: null,
         rate22k: null,
+        rate24k: null,
         currency: 'INR',
         isDemo: true,
         message: 'Unable to load gold rate from database.',

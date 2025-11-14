@@ -41,6 +41,7 @@ const PURITY_OPTIONS = [
 interface GoldRate {
   rate20k: number | null;
   rate22k: number | null;
+  rate24k: number | null;
   updatedAt: string | null;
 }
 
@@ -94,6 +95,7 @@ export default function AdminDashboardEnhanced() {
   const [goldRate, setGoldRate] = useState<GoldRate | null>(null);
   const [goldRate20kInput, setGoldRate20kInput] = useState('');
   const [goldRate22kInput, setGoldRate22kInput] = useState('');
+  const [goldRate24kInput, setGoldRate24kInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -195,6 +197,9 @@ export default function AdminDashboardEnhanced() {
           }
           if (goldRateData.rate22k) {
             setGoldRate22kInput(String(goldRateData.rate22k));
+          }
+          if (goldRateData.rate24k) {
+            setGoldRate24kInput(String(goldRateData.rate24k));
           }
         }
       }
@@ -432,19 +437,23 @@ export default function AdminDashboardEnhanced() {
       goldRate20kInput.trim() === '' ? null : Number(goldRate20kInput);
     const value22 =
       goldRate22kInput.trim() === '' ? null : Number(goldRate22kInput);
+    const value24 =
+      goldRate24kInput.trim() === '' ? null : Number(goldRate24kInput);
 
     const valid20 =
       value20 === null || (Number.isFinite(value20) && value20 > 0);
     const valid22 =
       value22 === null || (Number.isFinite(value22) && value22 > 0);
+    const valid24 =
+      value24 === null || (Number.isFinite(value24) && value24 > 0);
 
-    if (!valid20 || !valid22) {
+    if (!valid20 || !valid22 || !valid24) {
       setError('Please enter valid positive numbers for gold rates.');
       return;
     }
 
-    if (value20 === null && value22 === null) {
-      setError('Please enter at least one gold rate (20K or 22K).');
+    if (value20 === null && value22 === null && value24 === null) {
+      setError('Please enter at least one gold rate (20K, 22K, or 24K).');
       return;
     }
 
@@ -461,6 +470,7 @@ export default function AdminDashboardEnhanced() {
         body: JSON.stringify({
           rate20k: value20,
           rate22k: value22,
+          rate24k: value24,
         }),
       });
 
@@ -961,6 +971,19 @@ export default function AdminDashboardEnhanced() {
                 <div className="grid gap-4 md:grid-cols-3">
                   <div>
                     <label className="block text-sm font-medium mb-1">
+                      24K Gold Rate (₹ / gram)
+                    </label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={goldRate24kInput}
+                      onChange={(e) => setGoldRate24kInput(e.target.value)}
+                      placeholder="e.g., 7200"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
                       22K Gold Rate (₹ / gram)
                     </label>
                     <Input
@@ -985,11 +1008,11 @@ export default function AdminDashboardEnhanced() {
                       placeholder="e.g., 5900"
                     />
                   </div>
-                  <div className="flex items-end">
-                    <Button type="button" onClick={handleGoldRateSave} className="w-full">
-                      Save Gold Rates
-                    </Button>
-                  </div>
+                </div>
+                <div className="flex justify-start">
+                  <Button type="button" onClick={handleGoldRateSave}>
+                    Save Gold Rates
+                  </Button>
                 </div>
                 {goldRate && goldRate.updatedAt && (
                   <p className="text-xs text-muted-foreground">

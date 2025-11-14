@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
         {
           rate20k: null,
           rate22k: null,
+          rate24k: null,
           updatedAt: null,
         },
         { status: 200 },
@@ -36,6 +37,7 @@ export async function GET(request: NextRequest) {
       {
         rate20k: rate.rate_20k,
         rate22k: rate.rate_22k,
+        rate24k: rate.rate_24k,
         updatedAt: rate.updated_at.toISOString(),
       },
       { status: 200 },
@@ -69,6 +71,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const raw20 = body.rate20k;
     const raw22 = body.rate22k;
+    const raw24 = body.rate24k;
 
     const rate20k =
       raw20 === null || raw20 === undefined || raw20 === ''
@@ -78,27 +81,33 @@ export async function POST(request: NextRequest) {
       raw22 === null || raw22 === undefined || raw22 === ''
         ? null
         : Number(raw22);
+    const rate24k =
+      raw24 === null || raw24 === undefined || raw24 === ''
+        ? null
+        : Number(raw24);
 
     const isValid20 =
       rate20k === null || (Number.isFinite(rate20k) && rate20k > 0);
     const isValid22 =
       rate22k === null || (Number.isFinite(rate22k) && rate22k > 0);
+    const isValid24 =
+      rate24k === null || (Number.isFinite(rate24k) && rate24k > 0);
 
-    if (!isValid20 || !isValid22) {
+    if (!isValid20 || !isValid22 || !isValid24) {
       return NextResponse.json(
         { error: 'Gold rates must be positive numbers when provided.' },
         { status: 400 },
       );
     }
 
-    if (rate20k === null && rate22k === null) {
+    if (rate20k === null && rate22k === null && rate24k === null) {
       return NextResponse.json(
-        { error: 'Provide at least one gold rate (20K or 22K).' },
+        { error: 'Provide at least one gold rate (20K, 22K, or 24K).' },
         { status: 400 },
       );
     }
 
-    await upsertGoldRate(rate20k, rate22k);
+    await upsertGoldRate(rate20k, rate22k, rate24k);
 
     return NextResponse.json(
       { message: 'Gold rate updated successfully' },

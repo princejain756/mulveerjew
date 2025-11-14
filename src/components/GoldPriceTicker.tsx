@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 type GoldPriceResponse = {
   rate20k: number | null;
   rate22k: number | null;
+  rate24k: number | null;
   currency: string;
   isDemo?: boolean;
   updatedAt?: string;
@@ -40,7 +41,7 @@ const GoldPriceTicker = () => {
 
   const isDemo =
     data?.isDemo ||
-    (!data?.rate20k && !data?.rate22k);
+    (!data?.rate20k && !data?.rate22k && !data?.rate24k);
 
   return (
     <section
@@ -62,8 +63,21 @@ const GoldPriceTicker = () => {
           )}
           {!loading && !error && data && (
             <span className="text-sm font-medium text-[#2b2b2b]">
-              {data.rate20k || data.rate22k ? (
+              {data.rate24k || data.rate22k || data.rate20k ? (
                 <>
+                  {data.rate24k && (
+                    <span>
+                      24K:&nbsp;
+                      ₹
+                      {data.rate24k.toLocaleString("en-IN", {
+                        maximumFractionDigits: 2,
+                      })}
+                      /g
+                    </span>
+                  )}
+                  {data.rate24k && (data.rate22k || data.rate20k) && (
+                    <span className="mx-2">•</span>
+                  )}
                   {data.rate22k && (
                     <span>
                       22K:&nbsp;
