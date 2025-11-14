@@ -1,0 +1,276 @@
+/* Updated: 2025-11-12T10:36:53.102Z */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Mulveer Jewellers brand palette */
+  --color-background: #fffaf3; /* Ivory / cream */
+  --color-foreground: #2b2b2b; /* Charcoal text */
+
+  --color-card: #fffdf8;
+  --color-card-foreground: #2b2b2b;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #2b2b2b;
+
+  --color-primary: #5a1024; /* Deep maroon */
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #f3e5dc; /* Soft warm neutral */
+  --color-secondary-foreground: #2b2b2b;
+
+  --color-muted: #f3e5dc;
+  --color-muted-foreground: #6b6b6b;
+
+  --color-accent: #d4af37; /* Antique gold */
+  --color-accent-foreground: #2b2b2b;
+
+  --color-destructive: #c53030;
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: #e3d5c6;
+  --color-input: #e3d5c6;
+  --color-ring: #d4af37;
+
+  --color-chart-1: #b76e79;
+  --color-chart-2: #d4af37;
+  --color-chart-3: #2b2b2b;
+  --color-chart-4: #f6e2c7;
+  --color-chart-5: #c53030;
+
+  --color-sidebar: #f7f7f7;
+  --color-sidebar-foreground: #404040;
+  --color-sidebar-primary: #1a1a1a;
+  --color-sidebar-primary-foreground: #fafafa;
+  --color-sidebar-accent: #f0f0f0;
+  --color-sidebar-accent-foreground: #1a1a1a;
+  --color-sidebar-border: #d4d4d8;
+  --color-sidebar-ring: #3b82f6;
+
+  --radius-lg: 0rem;
+  --radius-md: 0rem;
+  --radius-sm: 0rem;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  /* Mulveer Jewellers specific colors */
+  --color-header-background: #3f0d1c; /* Deep maroon for header */
+  --color-text-primary: #2b2b2b;
+  --color-text-secondary: #6b6b6b;
+  --color-strikethrough-price: #999999;
+  --color-sale-price: #c53030;
+  --color-notification-bar: #2b2b2b;
+  --color-pink-gradient-start: #f6e2c7;
+  --color-pink-gradient-end: #f0d5b8;
+  --color-footer-background: #1a050d;
+
+  /* Typography */
+  --font-display: "GT Standard", sans-serif; /* Using Inter as fallback */
+  --font-body: "Inter", sans-serif;
+}
+
+/*
+  The default border color has changed to currentColor in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+}
+
+@layer utilities {
+  body {
+    font-family: var(--font-body);
+  }
+}
+
+@layer base {
+  :root {
+    --background: var(--color-background);
+    --foreground: var(--color-foreground);
+    --card: var(--color-card);
+    --card-foreground: var(--color-card-foreground);
+    --popover: var(--color-popover);
+    --popover-foreground: var(--color-popover-foreground);
+    --primary: var(--color-primary);
+    --primary-foreground: var(--color-primary-foreground);
+    --secondary: var(--color-secondary);
+    --secondary-foreground: var(--color-secondary-foreground);
+    --muted: var(--color-muted);
+    --muted-foreground: var(--color-muted-foreground);
+    --accent: var(--color-accent);
+    --accent-foreground: var(--color-accent-foreground);
+    --destructive: var(--color-destructive);
+    --destructive-foreground: var(--color-destructive-foreground);
+    --border: var(--color-border);
+    --input: var(--color-input);
+    --ring: var(--color-ring);
+    --chart-1: var(--color-chart-1);
+    --chart-2: var(--color-chart-2);
+    --chart-3: var(--color-chart-3);
+    --chart-4: var(--color-chart-4);
+    --chart-5: var(--color-chart-5);
+    --radius: var(--radius-lg);
+    --sidebar-background: var(--color-sidebar);
+    --sidebar-foreground: var(--color-sidebar-foreground);
+    --sidebar-primary: var(--color-sidebar-primary);
+    --sidebar-primary-foreground: var(--color-sidebar-primary-foreground);
+    --sidebar-accent: var(--color-sidebar-accent);
+    --sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
+    --sidebar-border: var(--color-sidebar-border);
+    --sidebar-ring: var(--color-sidebar-ring);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--color-text-primary);
+    line-height: 1.1;
+  }
+
+  h1 {
+    font-size: 56px;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  h5 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+  }
+
+  .text-body-large {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .text-body-small {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .text-price {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .text-button {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .container {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 48px;
+    }
+    h2 {
+      font-size: 32px;
+    }
+    h3 {
+      font-size: 22px;
+    }
+    .container {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 36px;
+    }
+    h2 {
+      font-size: 28px;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    p, .text-body-large, .text-body-small, .text-price, .text-button {
+      font-size: 13px;
+    }
+  }
+}
+
+/* Hide Next.js error overlay portal */
+nextjs-portal {
+  display: none !important;
+}
