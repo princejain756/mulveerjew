@@ -357,7 +357,7 @@ export default function ContactPage() {
       {/* CTA Section */}
       <section className="bg-[#3f0d1c] text-white py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Still have questions?</h2>
+          <h2 className="text-3xl font-bold mb-4 text-white">Still have questions?</h2>
           <p className="text-[#f6e2c7] mb-6">Reach out to us in any way you prefer. We're here to help!</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a

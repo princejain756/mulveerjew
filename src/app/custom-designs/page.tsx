@@ -253,7 +253,7 @@ export default function CustomDesignsPage() {
       <section className="bg-[#3f0d1c] text-white py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-4xl font-bold mb-4 text-white">
               What Our Customers Say
             </h2>
           </div>

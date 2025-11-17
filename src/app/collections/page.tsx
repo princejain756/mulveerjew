@@ -228,17 +228,17 @@ export default function CollectionsPage() {
           <div className="grid gap-8 md:grid-cols-3">
             <div className="text-center">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-[#f6e2c7]" />
-              <h3 className="text-xl font-bold mb-2">BIS Hallmarked</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">BIS Hallmarked</h3>
               <p className="text-[#f6e2c7]">Every piece certified for authenticity and purity</p>
             </div>
             <div className="text-center">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-[#f6e2c7]" />
-              <h3 className="text-xl font-bold mb-2">Expert Crafted</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">Expert Crafted</h3>
               <p className="text-[#f6e2c7]">Handmade by master artisans with decades of experience</p>
             </div>
             <div className="text-center">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-[#f6e2c7]" />
-              <h3 className="text-xl font-bold mb-2">Lifetime Care</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">Lifetime Care</h3>
               <p className="text-[#f6e2c7]">Repair, cleaning, and maintenance for life</p>
             </div>
           </div>

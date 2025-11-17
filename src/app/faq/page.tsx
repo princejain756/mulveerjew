@@ -224,7 +224,7 @@ export default function FAQPage() {
       {/* Still Have Questions */}
       <section className="bg-[#3f0d1c] text-white py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6">
+          <h2 className="text-4xl font-bold mb-6 text-white">
             Still Have Questions?
           </h2>
           <p className="text-xl text-[#f6e2c7] mb-8 max-w-2xl mx-auto">

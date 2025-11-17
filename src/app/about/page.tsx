@@ -244,7 +244,7 @@ export default function AboutPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#f6e2c7] mb-4">
               Our Pride
             </p>
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-4xl font-bold mb-4 text-white">
               Experienced Artisans & Team
             </h2>
             <p className="text-[#f6e2c7] max-w-2xl mx-auto">
