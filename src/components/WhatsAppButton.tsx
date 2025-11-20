@@ -2,7 +2,7 @@
 
 import { MessageCircle } from "lucide-react";
 
-const WHATSAPP_NUMBER = "919481656583"; // Stored as international number without +
+const WHATSAPP_NUMBER = "917204456583"; // Stored as international number without +
 
 const WhatsAppButton = () => {
   const message =

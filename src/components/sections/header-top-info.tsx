@@ -53,7 +53,7 @@ const HeaderTopInfo = () => {
                                 <span className="hidden xl:inline">@mulveer_jewellers</span>
                             </a>
                             <a
-                              href="https://api.whatsapp.com/send?phone=+919481656583"
+                              href="https://api.whatsapp.com/send?phone=917204456583"
                               aria-label="WhatsApp"
                               target="_blank"
                               rel="noopener noreferrer"
