@@ -22,7 +22,7 @@ export const navLinks: NavItem[] = [
 const MainNavigation = () => {
   const pathname = usePathname();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [goldData, setGoldData] = useState<{ rate22k: number | null } | null>(null);
+  const [featuredRate, setFeaturedRate] = useState<{ label: string; value: number } | null>(null);
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -30,7 +30,19 @@ const MainNavigation = () => {
         const res = await fetch("/api/gold-price");
         if (res.ok) {
           const json = await res.json();
-          setGoldData({ rate22k: json.rate22k });
+          const label = json.rate22k
+            ? '22K'
+            : json.rate18k
+              ? '18K'
+              : json.silverRate
+                ? 'Silver'
+                : null;
+          const value = json.rate22k ?? json.rate18k ?? json.silverRate;
+          if (label && value) {
+            setFeaturedRate({ label, value });
+          } else {
+            setFeaturedRate(null);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -66,9 +78,9 @@ const MainNavigation = () => {
                 className="ml-4 flex items-center gap-2 rounded-md bg-[#5a1024] px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:bg-[#6a1424]"
               >
                 <span>Today's Rate</span>
-                {goldData?.rate22k && (
+                {featuredRate && (
                   <span className="text-yellow-300">
-                    ₹{goldData.rate22k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                    {featuredRate.label}: ₹{featuredRate.value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 )}
               </button>

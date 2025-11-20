@@ -2,9 +2,9 @@ import { query } from './db';
 
 export interface GoldRateSetting {
   id: number;
-  rate_20k: number | null;
   rate_22k: number | null;
-  rate_24k: number | null;
+  rate_18k: number | null;
+  silver_rate: number | null;
   updated_at: Date;
 }
 
@@ -17,15 +17,40 @@ async function ensureGoldRatesTableExists(): Promise<void> {
       rate_20k DECIMAL(10,2) DEFAULT NULL,
       rate_22k DECIMAL(10,2) DEFAULT NULL,
       rate_24k DECIMAL(10,2) DEFAULT NULL,
+      rate_18k DECIMAL(10,2) DEFAULT NULL,
+      silver_rate DECIMAL(10,2) DEFAULT NULL,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
   `);
+
+  await ensureColumnExists('rate_18k', 'DECIMAL(10,2) DEFAULT NULL');
+  await ensureColumnExists('silver_rate', 'DECIMAL(10,2) DEFAULT NULL');
+}
+
+async function ensureColumnExists(
+  column: string,
+  definition: string,
+): Promise<void> {
+  const rows = await query(
+    `SELECT COUNT(*) AS count
+     FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'gold_rates'
+       AND COLUMN_NAME = ?`,
+    [column],
+  );
+
+  const count = Number(rows?.[0]?.count ?? 0);
+  if (count === 0) {
+    await query(`ALTER TABLE gold_rates ADD COLUMN ${column} ${definition}`);
+  }
 }
 
 export async function getGoldRate(): Promise<GoldRateSetting | null> {
+  await ensureGoldRatesTableExists();
   try {
     const rows = await query(
-      'SELECT id, rate_20k, rate_22k, rate_24k, updated_at FROM gold_rates WHERE id = 1',
+      'SELECT id, rate_22k, rate_18k, silver_rate, updated_at FROM gold_rates WHERE id = 1',
     );
 
     if (!rows || rows.length === 0) {
@@ -36,22 +61,21 @@ export async function getGoldRate(): Promise<GoldRateSetting | null> {
 
     return {
       id: row.id,
-      rate_20k:
-        row.rate_20k !== null && row.rate_20k !== undefined
-          ? Number(row.rate_20k)
-          : null,
       rate_22k:
         row.rate_22k !== null && row.rate_22k !== undefined
           ? Number(row.rate_22k)
           : null,
-      rate_24k:
-        row.rate_24k !== null && row.rate_24k !== undefined
-          ? Number(row.rate_24k)
+      rate_18k:
+        row.rate_18k !== null && row.rate_18k !== undefined
+          ? Number(row.rate_18k)
+          : null,
+      silver_rate:
+        row.silver_rate !== null && row.silver_rate !== undefined
+          ? Number(row.silver_rate)
           : null,
       updated_at: row.updated_at,
     };
   } catch (error: any) {
-    // Handle case where table does not exist yet
     if (error && error.code === 'ER_NO_SUCH_TABLE') {
       await ensureGoldRatesTableExists();
       return null;
@@ -61,44 +85,43 @@ export async function getGoldRate(): Promise<GoldRateSetting | null> {
 }
 
 export async function upsertGoldRate(
-  rate20k: number | null,
   rate22k: number | null,
-  rate24k: number | null,
+  rate18k: number | null,
+  silverRate: number | null,
 ): Promise<void> {
+  await ensureGoldRatesTableExists();
   try {
-    // Use rate_24k as price_per_gram_inr, or rate_22k if 24k is not set, or rate_20k if 22k is not set, or 0 as fallback
-    const pricePerGram = rate24k ?? rate22k ?? rate20k ?? 0;
-    
-    // Keep only one row (id = 1) and update all rates
+    const pricePerGram = rate22k ?? rate18k ?? silverRate ?? 0;
+
     await query(
       `
-        INSERT INTO gold_rates (id, price_per_gram_inr, rate_20k, rate_22k, rate_24k)
+        INSERT INTO gold_rates (id, price_per_gram_inr, rate_22k, rate_18k, silver_rate)
         VALUES (1, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
           price_per_gram_inr = VALUES(price_per_gram_inr),
-          rate_20k = VALUES(rate_20k),
           rate_22k = VALUES(rate_22k),
-          rate_24k = VALUES(rate_24k),
+          rate_18k = VALUES(rate_18k),
+          silver_rate = VALUES(silver_rate),
           updated_at = CURRENT_TIMESTAMP
       `,
-      [pricePerGram, rate20k, rate22k, rate24k],
+      [pricePerGram, rate22k, rate18k, silverRate],
     );
   } catch (error: any) {
     if (error && error.code === 'ER_NO_SUCH_TABLE') {
       await ensureGoldRatesTableExists();
-      const pricePerGram = rate24k ?? rate22k ?? rate20k ?? 0;
+      const pricePerGram = rate22k ?? rate18k ?? silverRate ?? 0;
       await query(
         `
-          INSERT INTO gold_rates (id, price_per_gram_inr, rate_20k, rate_22k, rate_24k)
+          INSERT INTO gold_rates (id, price_per_gram_inr, rate_22k, rate_18k, silver_rate)
           VALUES (1, ?, ?, ?, ?)
           ON DUPLICATE KEY UPDATE
             price_per_gram_inr = VALUES(price_per_gram_inr),
-            rate_20k = VALUES(rate_20k),
             rate_22k = VALUES(rate_22k),
-            rate_24k = VALUES(rate_24k),
+            rate_18k = VALUES(rate_18k),
+            silver_rate = VALUES(silver_rate),
             updated_at = CURRENT_TIMESTAMP
         `,
-        [pricePerGram, rate20k, rate22k, rate24k],
+        [pricePerGram, rate22k, rate18k, silverRate],
       );
       return;
     }

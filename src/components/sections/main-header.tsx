@@ -30,7 +30,7 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: M
 export default function MainHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [goldData, setGoldData] = useState<{ rate20k: number | null; rate22k: number | null; rate24k: number | null } | null>(null);
+  const [goldData, setGoldData] = useState<{ rate22k: number | null; rate18k: number | null; silverRate: number | null } | null>(null);
   const [isGoldPopupOpen, setIsGoldPopupOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -50,7 +50,7 @@ export default function MainHeader() {
         const res = await fetch("/api/gold-price");
         if (res.ok) {
           const json = await res.json();
-          setGoldData({ rate20k: json.rate20k, rate22k: json.rate22k });
+          setGoldData({ rate22k: json.rate22k ?? null, rate18k: json.rate18k ?? null, silverRate: json.silverRate ?? null });
         }
       } catch (err) {
         console.error(err);
@@ -61,6 +61,16 @@ export default function MainHeader() {
     const interval = setInterval(fetchPrice, 60_000);
     return () => clearInterval(interval);
   }, []);
+
+  const highlightedRateValue =
+    goldData?.rate22k ?? goldData?.rate18k ?? goldData?.silverRate ?? null;
+  const highlightedRateLabel = goldData?.rate22k
+    ? '22K'
+    : goldData?.rate18k
+      ? '18K'
+      : goldData?.silverRate
+        ? 'Silver'
+        : null;
 
   return (
     <>
@@ -200,24 +210,23 @@ export default function MainHeader() {
             </div>
           </div>
 
-          <div className="w-full flex items-center justify-center gap-2 pb-2 pt-2 text-xs md:text-sm lg:pb-3.5 lg:pt-3">
+          <div className="w-full flex flex-wrap items-center justify-center gap-2 pb-2 pt-2 text-xs md:text-sm lg:pb-3.5 lg:pt-3">
             <p className="text-center tracking-wide text-[#f6e2c7]">
               Gold, Silver & Diamond Jewellery · Belagavi · Since 2000
             </p>
             {goldData && (
-              <span className="ml-2 border-l border-[#f6e2c7] pl-2 text-[#f6e2c7] whitespace-nowrap">
-                {goldData.rate24k && (
-                  <span>24K: ₹{goldData.rate24k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
+              <div className="ml-2 flex flex-wrap items-center gap-2">
+                {[{ label: '22K', value: goldData.rate22k }, { label: '18K', value: goldData.rate18k }, { label: 'Silver', value: goldData.silverRate }].map(({ label, value }) =>
+                  value ? (
+                    <span
+                      key={label}
+                      className="rounded-full border border-[#f6e2c7]/50 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[#f6e2c7]"
+                    >
+                      {label}: ₹{value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    </span>
+                  ) : null
                 )}
-                {goldData.rate24k && goldData.rate22k && <span className="mx-1">•</span>}
-                {goldData.rate22k && (
-                  <span>22K: ₹{goldData.rate22k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
-                )}
-                {goldData.rate22k && goldData.rate20k && <span className="mx-1">•</span>}
-                {goldData.rate20k && (
-                  <span>20K: ₹{goldData.rate20k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</span>
-                )}
-              </span>
+              </div>
             )}
           </div>
 
@@ -253,9 +262,9 @@ export default function MainHeader() {
                     className="w-full rounded-md bg-[#5a1024] px-2 py-2 text-sm font-semibold uppercase tracking-[0.15em] text-white hover:bg-[#6a1424]"
                   >
                     Today's Rate
-                    {goldData?.rate24k && (
+                    {highlightedRateValue && highlightedRateLabel && (
                       <span className="ml-2 text-yellow-300">
-                        ₹{goldData.rate24k.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                        {highlightedRateLabel}: ₹{highlightedRateValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                       </span>
                     )}
                   </button>

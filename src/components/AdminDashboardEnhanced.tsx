@@ -39,9 +39,9 @@ const PURITY_OPTIONS = [
 ];
 
 interface GoldRate {
-  rate20k: number | null;
   rate22k: number | null;
-  rate24k: number | null;
+  rate18k: number | null;
+  silverRate: number | null;
   updatedAt: string | null;
 }
 
@@ -93,9 +93,9 @@ export default function AdminDashboardEnhanced() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [goldRate, setGoldRate] = useState<GoldRate | null>(null);
-  const [goldRate20kInput, setGoldRate20kInput] = useState('');
   const [goldRate22kInput, setGoldRate22kInput] = useState('');
-  const [goldRate24kInput, setGoldRate24kInput] = useState('');
+  const [goldRate18kInput, setGoldRate18kInput] = useState('');
+  const [silverRateInput, setSilverRateInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -192,15 +192,21 @@ export default function AdminDashboardEnhanced() {
         const goldRateData = await goldRateRes.json();
         setGoldRate(goldRateData);
         if (goldRateData) {
-          if (goldRateData.rate20k) {
-            setGoldRate20kInput(String(goldRateData.rate20k));
-          }
-          if (goldRateData.rate22k) {
-            setGoldRate22kInput(String(goldRateData.rate22k));
-          }
-          if (goldRateData.rate24k) {
-            setGoldRate24kInput(String(goldRateData.rate24k));
-          }
+          setGoldRate22kInput(
+            goldRateData.rate22k !== null && goldRateData.rate22k !== undefined
+              ? String(goldRateData.rate22k)
+              : '',
+          );
+          setGoldRate18kInput(
+            goldRateData.rate18k !== null && goldRateData.rate18k !== undefined
+              ? String(goldRateData.rate18k)
+              : '',
+          );
+          setSilverRateInput(
+            goldRateData.silverRate !== null && goldRateData.silverRate !== undefined
+              ? String(goldRateData.silverRate)
+              : '',
+          );
         }
       }
     } catch (err) {
@@ -433,27 +439,27 @@ export default function AdminDashboardEnhanced() {
 
   const handleGoldRateSave = async () => {
     if (!accessToken) return;
-    const value20 =
-      goldRate20kInput.trim() === '' ? null : Number(goldRate20kInput);
     const value22 =
       goldRate22kInput.trim() === '' ? null : Number(goldRate22kInput);
-    const value24 =
-      goldRate24kInput.trim() === '' ? null : Number(goldRate24kInput);
+    const value18 =
+      goldRate18kInput.trim() === '' ? null : Number(goldRate18kInput);
+    const valueSilver =
+      silverRateInput.trim() === '' ? null : Number(silverRateInput);
 
-    const valid20 =
-      value20 === null || (Number.isFinite(value20) && value20 > 0);
     const valid22 =
       value22 === null || (Number.isFinite(value22) && value22 > 0);
-    const valid24 =
-      value24 === null || (Number.isFinite(value24) && value24 > 0);
+    const valid18 =
+      value18 === null || (Number.isFinite(value18) && value18 > 0);
+    const validSilver =
+      valueSilver === null || (Number.isFinite(valueSilver) && valueSilver > 0);
 
-    if (!valid20 || !valid22 || !valid24) {
-      setError('Please enter valid positive numbers for gold rates.');
+    if (!valid22 || !valid18 || !validSilver) {
+      setError('Please enter valid positive numbers for the rates.');
       return;
     }
 
-    if (value20 === null && value22 === null && value24 === null) {
-      setError('Please enter at least one gold rate (20K, 22K, or 24K).');
+    if (value22 === null && value18 === null && valueSilver === null) {
+      setError('Please enter at least one rate (22K Gold, 18K Gold, or Silver).');
       return;
     }
 
@@ -468,21 +474,21 @@ export default function AdminDashboardEnhanced() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          rate20k: value20,
           rate22k: value22,
-          rate24k: value24,
+          rate18k: value18,
+          silverRate: valueSilver,
         }),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to update gold rate');
+        throw new Error(data.error || 'Failed to update rates');
       }
 
-      setSuccess('Gold rate updated successfully');
+      setSuccess('Daily rates updated successfully');
       await fetchAllData();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update gold rate');
+      setError(err instanceof Error ? err.message : 'Failed to update rates');
     }
   };
 
@@ -961,67 +967,79 @@ export default function AdminDashboardEnhanced() {
           <TabsContent value="settings" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Gold Rate Settings</CardTitle>
+                <CardTitle>Daily Rate Board</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <p className="text-sm text-muted-foreground">
-                  Set the current showroom gold rates per gram. These values power the
-                  gold rate ticker on the homepage.
+                  Keep the bullion board synced with showroom pricing. These three values
+                  power the ticker, header chip, and the customer-facing gold rate popup.
                 </p>
                 <div className="grid gap-4 md:grid-cols-3">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      24K Gold Rate (₹ / gram)
-                    </label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={goldRate24kInput}
-                      onChange={(e) => setGoldRate24kInput(e.target.value)}
-                      placeholder="e.g., 7200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      22K Gold Rate (₹ / gram)
-                    </label>
+                  <div className="rounded-2xl border border-[#f5dab6] bg-gradient-to-br from-[#fff7e6] via-[#ffe7c9] to-[#fedfa8] p-5 shadow-inner">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#c47b00]">
+                      Flagship
+                    </p>
+                    <h4 className="mt-1 text-2xl font-bold text-[#2c1307]">22K Gold</h4>
+                    <p className="mb-3 text-xs text-[#6f4c32]">Primary daily rate</p>
                     <Input
                       type="number"
                       step="0.01"
                       min="0"
                       value={goldRate22kInput}
                       onChange={(e) => setGoldRate22kInput(e.target.value)}
-                      placeholder="e.g., 6500"
+                      placeholder="e.g., 6525"
+                      className="border-none bg-white/90 text-lg font-semibold text-[#2c1307]"
                     />
+                    <p className="mt-1 text-[11px] text-[#8c5f2d]">₹ / gram</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      20K Gold Rate (₹ / gram)
-                    </label>
+                  <div className="rounded-2xl border border-[#f0d8ef] bg-gradient-to-br from-[#fdf3ff] via-[#f4e6ff] to-[#ecd9ff] p-5 shadow-inner">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#7d3bb7]">
+                      Couture
+                    </p>
+                    <h4 className="mt-1 text-2xl font-bold text-[#2d1038]">18K Gold</h4>
+                    <p className="mb-3 text-xs text-[#5a4064]">For designer pieces</p>
                     <Input
                       type="number"
                       step="0.01"
                       min="0"
-                      value={goldRate20kInput}
-                      onChange={(e) => setGoldRate20kInput(e.target.value)}
-                      placeholder="e.g., 5900"
+                      value={goldRate18kInput}
+                      onChange={(e) => setGoldRate18kInput(e.target.value)}
+                      placeholder="e.g., 5350"
+                      className="border-none bg-white/90 text-lg font-semibold text-[#2d1038]"
                     />
+                    <p className="mt-1 text-[11px] text-[#7a4a8f]">₹ / gram</p>
+                  </div>
+                  <div className="rounded-2xl border border-[#d5e2f4] bg-gradient-to-br from-[#f7fbff] via-[#edf5ff] to-[#e0efff] p-5 shadow-inner">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#2a5f94]">
+                      Sterling
+                    </p>
+                    <h4 className="mt-1 text-2xl font-bold text-[#1a2f46]">Silver</h4>
+                    <p className="mb-3 text-xs text-[#50627a]">Investment grade</p>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={silverRateInput}
+                      onChange={(e) => setSilverRateInput(e.target.value)}
+                      placeholder="e.g., 87"
+                      className="border-none bg-white/90 text-lg font-semibold text-[#1a2f46]"
+                    />
+                    <p className="mt-1 text-[11px] text-[#3e5673]">₹ / gram</p>
                   </div>
                 </div>
-                <div className="flex justify-start">
+                <div className="flex flex-wrap items-center gap-3">
                   <Button type="button" onClick={handleGoldRateSave}>
-                    Save Gold Rates
+                    Save Daily Rates
                   </Button>
+                  {goldRate && goldRate.updatedAt && (
+                    <span className="text-xs text-muted-foreground">
+                      Synced{' '}
+                      {new Date(goldRate.updatedAt).toLocaleString('en-IN', {
+                        hour12: true,
+                      })}
+                    </span>
+                  )}
                 </div>
-                {goldRate && goldRate.updatedAt && (
-                  <p className="text-xs text-muted-foreground">
-                    Last updated:{' '}
-                    {new Date(goldRate.updatedAt).toLocaleString('en-IN', {
-                      hour12: true,
-                    })}
-                  </p>
-                )}
               </CardContent>
             </Card>
           </TabsContent>

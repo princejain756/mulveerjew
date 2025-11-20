@@ -130,6 +130,24 @@ To access the admin dashboard:
 2. Login with admin credentials
 3. Navigate to `/admin`
 
+## Local Database Setup
+
+1. Copy `.env.example` to `.env` and configure the database block:
+   - `DB_USER` / `DB_PASSWORD`: credentials the Next.js app will use.
+   - `DB_USER_HOST`: host restriction for the app user (usually `localhost` during development).
+   - `DB_ROOT_USER` / `DB_ROOT_PASSWORD`: privileged credentials (e.g., MySQL root) used only by the setup scripts to create the schema and app user.
+2. Ensure MySQL is running locally.
+3. Initialize the schema and seed data:
+   ```bash
+   node scripts/init-db.js
+   ```
+   This script now also creates/grants the `DB_USER` automatically if it does not exist.
+4. To wipe and recreate everything, run:
+   ```bash
+   node scripts/reset-db.js
+   ```
+5. Start the dev server with `npm run dev`.
+
 ## Payment Integration
 
 ### RazorPay Setup
