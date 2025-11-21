@@ -36,7 +36,7 @@ const HeroSlideshow = () => {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden md:aspect-[1800/644] aspect-[2/3]">
+    <section className="relative w-full h-screen overflow-hidden">
       {slides.map((slide, index) => (
         <div
           key={index}

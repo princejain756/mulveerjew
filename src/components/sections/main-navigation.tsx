@@ -56,7 +56,7 @@ const MainNavigation = () => {
 
   return (
     <>
-      <nav className="sticky top-[105px] z-40 hidden lg:block bg-[#2a0714] border-b border-[#5f2130] text-white shadow-sm">
+      <nav className="sticky top-[118px] z-40 hidden lg:block bg-[#2a0714] border-b border-[#5f2130] text-white shadow-sm">
         <div className="mx-auto max-w-[1200px]">
           <ul className="flex items-center justify-center">
             {navLinks.map((link) => (

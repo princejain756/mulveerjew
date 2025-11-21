@@ -104,10 +104,10 @@ export default function MainHeader() {
             <div className="py-5">
               <Link href="/" aria-label="Mulveer Jewellers">
                 <Image
-                  src="/mulverrlog.png"
+                  src="/mulverrlog.webp"
                   alt="Mulveer Jewellers"
-                  width={150}
-                  height={38}
+                  width={300}
+                  height={76}
                   priority
                 />
               </Link>

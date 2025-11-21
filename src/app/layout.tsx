@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Mulveer Jewellers, Belagavi – BIS hallmarked gold, pure silver and certified diamond jewellery. Trusted since 2000 for transparent pricing, minimal making charges and custom-made ornaments.",
   icons: {
-    icon: '/mulverrlog.png',
+    icon: '/mulverrlog.webp',
   },
 };
 
