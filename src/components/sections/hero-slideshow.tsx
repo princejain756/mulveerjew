@@ -7,19 +7,19 @@ import Link from "next/link";
 const slides = [
   {
     desktopImage: "/mulverhero.webp",
-    mobileImage: "/mulverhero.webp",
+    mobileImage: "/mulveerheromobile.webp",
     href: "/products",
     alt: "Mulveer Jewellers Hero Banner"
   },
   {
     desktopImage: "/mulverhero.webp",
-    mobileImage: "/mulverhero.webp",
+    mobileImage: "/mulveerheromobile.webp",
     href: "/products",
     alt: "Mulveer Jewellers Hero Banner"
   },
   {
     desktopImage: "/mulverhero.webp",
-    mobileImage: "/mulverhero.webp",
+    mobileImage: "/mulveerheromobile.webp",
     href: "/products",
     alt: "Mulveer Jewellers Hero Banner"
   },
@@ -36,7 +36,7 @@ const HeroSlideshow = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full md:h-screen h-96 overflow-hidden">
       {slides.map((slide, index) => (
         <div
           key={index}
