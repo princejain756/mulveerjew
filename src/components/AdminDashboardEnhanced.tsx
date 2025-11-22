@@ -39,7 +39,9 @@ const PURITY_OPTIONS = [
 ];
 
 interface GoldRate {
+  rate24k: number | null;
   rate22k: number | null;
+  rate20k: number | null;
   rate18k: number | null;
   silverRate: number | null;
   updatedAt: string | null;
@@ -93,7 +95,9 @@ export default function AdminDashboardEnhanced() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [goldRate, setGoldRate] = useState<GoldRate | null>(null);
+  const [goldRate24kInput, setGoldRate24kInput] = useState('');
   const [goldRate22kInput, setGoldRate22kInput] = useState('');
+  const [goldRate20kInput, setGoldRate20kInput] = useState('');
   const [goldRate18kInput, setGoldRate18kInput] = useState('');
   const [silverRateInput, setSilverRateInput] = useState('');
   const [loading, setLoading] = useState(true);
@@ -192,9 +196,19 @@ export default function AdminDashboardEnhanced() {
         const goldRateData = await goldRateRes.json();
         setGoldRate(goldRateData);
         if (goldRateData) {
+          setGoldRate24kInput(
+            goldRateData.rate24k !== null && goldRateData.rate24k !== undefined
+              ? String(goldRateData.rate24k)
+              : '',
+          );
           setGoldRate22kInput(
             goldRateData.rate22k !== null && goldRateData.rate22k !== undefined
               ? String(goldRateData.rate22k)
+              : '',
+          );
+          setGoldRate20kInput(
+            goldRateData.rate20k !== null && goldRateData.rate20k !== undefined
+              ? String(goldRateData.rate20k)
               : '',
           );
           setGoldRate18kInput(
@@ -439,27 +453,35 @@ export default function AdminDashboardEnhanced() {
 
   const handleGoldRateSave = async () => {
     if (!accessToken) return;
+    const value24 =
+      goldRate24kInput.trim() === '' ? null : Number(goldRate24kInput);
     const value22 =
       goldRate22kInput.trim() === '' ? null : Number(goldRate22kInput);
+    const value20 =
+      goldRate20kInput.trim() === '' ? null : Number(goldRate20kInput);
     const value18 =
       goldRate18kInput.trim() === '' ? null : Number(goldRate18kInput);
     const valueSilver =
       silverRateInput.trim() === '' ? null : Number(silverRateInput);
 
+    const valid24 =
+      value24 === null || (Number.isFinite(value24) && value24 > 0);
     const valid22 =
       value22 === null || (Number.isFinite(value22) && value22 > 0);
+    const valid20 =
+      value20 === null || (Number.isFinite(value20) && value20 > 0);
     const valid18 =
       value18 === null || (Number.isFinite(value18) && value18 > 0);
     const validSilver =
       valueSilver === null || (Number.isFinite(valueSilver) && valueSilver > 0);
 
-    if (!valid22 || !valid18 || !validSilver) {
+    if (!valid24 || !valid22 || !valid20 || !valid18 || !validSilver) {
       setError('Please enter valid positive numbers for the rates.');
       return;
     }
 
-    if (value22 === null && value18 === null && valueSilver === null) {
-      setError('Please enter at least one rate (22K Gold, 18K Gold, or Silver).');
+    if (value24 === null && value22 === null && value20 === null && value18 === null && valueSilver === null) {
+      setError('Please enter at least one rate (24K Gold, 22K Gold, 20K Gold, 18K Gold, or Silver).');
       return;
     }
 
@@ -474,7 +496,9 @@ export default function AdminDashboardEnhanced() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          rate24k: value24,
           rate22k: value22,
+          rate20k: value20,
           rate18k: value18,
           silverRate: valueSilver,
         }),
@@ -971,10 +995,27 @@ export default function AdminDashboardEnhanced() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <p className="text-sm text-muted-foreground">
-                  Keep the bullion board synced with showroom pricing. These three values
-                  power the ticker, header chip, and the customer-facing gold rate popup.
+                  Keep the bullion board synced with showroom pricing. The 24K rate
+                  powers the ticker, header chip, and the customer-facing gold rate popup.
                 </p>
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-5">
+                  <div className="rounded-2xl border border-[#d4af37] bg-gradient-to-br from-[#fef9f0] via-[#fff8e6] to-[#fef5d9] p-5 shadow-inner">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#aa8c1c]">
+                      Pure Gold
+                    </p>
+                    <h4 className="mt-1 text-2xl font-bold text-[#1a1410]">24K Gold</h4>
+                    <p className="mb-3 text-xs text-[#6b5f3f]">Today's rate</p>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={goldRate24kInput}
+                      onChange={(e) => setGoldRate24kInput(e.target.value)}
+                      placeholder="e.g., 7025"
+                      className="border-none bg-white/90 text-lg font-semibold text-[#1a1410]"
+                    />
+                    <p className="mt-1 text-[11px] text-[#8c7a3d]">₹ / gram</p>
+                  </div>
                   <div className="rounded-2xl border border-[#f5dab6] bg-gradient-to-br from-[#fff7e6] via-[#ffe7c9] to-[#fedfa8] p-5 shadow-inner">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#c47b00]">
                       Flagship
@@ -991,6 +1032,23 @@ export default function AdminDashboardEnhanced() {
                       className="border-none bg-white/90 text-lg font-semibold text-[#2c1307]"
                     />
                     <p className="mt-1 text-[11px] text-[#8c5f2d]">₹ / gram</p>
+                  </div>
+                  <div className="rounded-2xl border border-[#ffebd6] bg-gradient-to-br from-[#fffcf3] via-[#ffe8d1] to-[#ffd9ad] p-5 shadow-inner">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#b87d2b]">
+                      Premium
+                    </p>
+                    <h4 className="mt-1 text-2xl font-bold text-[#6b4523]">20K Gold</h4>
+                    <p className="mb-3 text-xs text-[#7a5c3d]">Contemporary luxury</p>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={goldRate20kInput}
+                      onChange={(e) => setGoldRate20kInput(e.target.value)}
+                      placeholder="e.g., 5945"
+                      className="border-none bg-white/90 text-lg font-semibold text-[#6b4523]"
+                    />
+                    <p className="mt-1 text-[11px] text-[#9d7050]">₹ / gram</p>
                   </div>
                   <div className="rounded-2xl border border-[#f0d8ef] bg-gradient-to-br from-[#fdf3ff] via-[#f4e6ff] to-[#ecd9ff] p-5 shadow-inner">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#7d3bb7]">

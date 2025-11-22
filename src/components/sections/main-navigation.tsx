@@ -30,14 +30,18 @@ const MainNavigation = () => {
         const res = await fetch("/api/gold-price");
         if (res.ok) {
           const json = await res.json();
-          const label = json.rate22k
-            ? '22K'
-            : json.rate18k
-              ? '18K'
-              : json.silverRate
-                ? 'Silver'
-                : null;
-          const value = json.rate22k ?? json.rate18k ?? json.silverRate;
+          const label = json.rate24k
+            ? '24K'
+            : json.rate22k
+              ? '22K'
+              : json.rate20k
+                ? '20K'
+                : json.rate18k
+                  ? '18K'
+                  : json.silverRate
+                    ? 'Silver'
+                    : null;
+          const value = json.rate24k ?? json.rate22k ?? json.rate20k ?? json.rate18k ?? json.silverRate;
           if (label && value) {
             setFeaturedRate({ label, value });
           } else {

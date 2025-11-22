@@ -30,7 +30,7 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement>, handler: (event: M
 export default function MainHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [goldData, setGoldData] = useState<{ rate22k: number | null; rate18k: number | null; silverRate: number | null } | null>(null);
+  const [goldData, setGoldData] = useState<{ rate24k: number | null; rate22k: number | null; rate20k: number | null; rate18k: number | null; silverRate: number | null } | null>(null);
   const [isGoldPopupOpen, setIsGoldPopupOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -50,7 +50,7 @@ export default function MainHeader() {
         const res = await fetch("/api/gold-price");
         if (res.ok) {
           const json = await res.json();
-          setGoldData({ rate22k: json.rate22k ?? null, rate18k: json.rate18k ?? null, silverRate: json.silverRate ?? null });
+          setGoldData({ rate24k: json.rate24k ?? null, rate22k: json.rate22k ?? null, rate20k: json.rate20k ?? null, rate18k: json.rate18k ?? null, silverRate: json.silverRate ?? null });
         }
       } catch (err) {
         console.error(err);
@@ -63,14 +63,18 @@ export default function MainHeader() {
   }, []);
 
   const highlightedRateValue =
-    goldData?.rate22k ?? goldData?.rate18k ?? goldData?.silverRate ?? null;
-  const highlightedRateLabel = goldData?.rate22k
-    ? '22K'
-    : goldData?.rate18k
-      ? '18K'
-      : goldData?.silverRate
-        ? 'Silver'
-        : null;
+    goldData?.rate24k ?? goldData?.rate22k ?? goldData?.rate20k ?? goldData?.rate18k ?? goldData?.silverRate ?? null;
+  const highlightedRateLabel = goldData?.rate24k
+    ? '24K'
+    : goldData?.rate22k
+      ? '22K'
+      : goldData?.rate20k
+        ? '20K'
+        : goldData?.rate18k
+          ? '18K'
+          : goldData?.silverRate
+            ? 'Silver'
+            : null;
 
   return (
     <>
@@ -216,7 +220,7 @@ export default function MainHeader() {
             </p>
             {goldData && (
               <div className="ml-2 flex flex-wrap items-center gap-2">
-                {[{ label: '22K', value: goldData.rate22k }, { label: '18K', value: goldData.rate18k }, { label: 'Silver', value: goldData.silverRate }].map(({ label, value }) =>
+                {[{ label: '22K', value: goldData.rate22k }, { label: '20K', value: goldData.rate20k }, { label: '18K', value: goldData.rate18k }, { label: 'Silver', value: goldData.silverRate }].map(({ label, value }) =>
                   value ? (
                     <span
                       key={label}

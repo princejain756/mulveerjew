@@ -5,7 +5,9 @@ import Image from "next/image";
 import { X } from "lucide-react";
 
 type GoldRateData = {
+  rate24k: number | null;
   rate22k: number | null;
+  rate20k: number | null;
   rate18k: number | null;
   silverRate: number | null;
   currency: string;
@@ -61,11 +63,27 @@ const GoldRatePopup = ({ isOpen, onClose }: GoldRatePopupProps) => {
 
   const segments = [
     {
+      label: "24K Gold",
+      tag: "Pure Gold",
+      description: "Today's featured rate",
+      value: data?.rate24k,
+      gradient: "from-white/90 via-[#fffef0] to-[#fff9d9]",
+      textColor: "text-[#2f190a]",
+    },
+    {
       label: "22K Gold",
       tag: "Wedding Classics",
       description: "Everyday heirlooms",
       value: data?.rate22k,
       gradient: "from-white/90 via-[#fff0d9] to-[#ffdba5]",
+      textColor: "text-[#2f190a]",
+    },
+    {
+      label: "20K Gold",
+      tag: "Premium",
+      description: "Contemporary luxury",
+      value: data?.rate20k,
+      gradient: "from-white/90 via-[#fffacd] to-[#ffd89b]",
       textColor: "text-[#2f190a]",
     },
     {
@@ -86,7 +104,7 @@ const GoldRatePopup = ({ isOpen, onClose }: GoldRatePopupProps) => {
     },
   ];
 
-  const hasRates = Boolean(data?.rate22k || data?.rate18k || data?.silverRate);
+  const hasRates = Boolean(data?.rate24k || data?.rate22k || data?.rate20k || data?.rate18k || data?.silverRate);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-2 sm:p-4">
