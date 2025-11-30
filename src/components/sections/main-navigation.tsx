@@ -83,7 +83,7 @@ const MainNavigation = () => {
               >
                 <span>Today's Rate</span>
                 {featuredRate && (
-                  <span className="text-yellow-300">
+                  <span className="todays-rate-highlight">
                     {featuredRate.label}: ₹{featuredRate.value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 )}

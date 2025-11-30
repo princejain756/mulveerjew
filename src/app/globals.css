@@ -274,3 +274,29 @@
 nextjs-portal {
   display: none !important;
 }
+
+/* Shimmering highlight for Today's Rate value */
+@keyframes todaysRateGlow {
+  0% {
+    text-shadow:
+      0 0 4px rgba(250, 204, 21, 0.4),
+      0 0 8px rgba(250, 204, 21, 0.2);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(255, 251, 235, 1),
+      0 0 20px rgba(250, 204, 21, 1);
+  }
+  100% {
+    text-shadow:
+      0 0 4px rgba(250, 204, 21, 0.4),
+      0 0 8px rgba(250, 204, 21, 0.2);
+  }
+}
+
+.todays-rate-highlight {
+  color: #facc15; /* Warm gold */
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  animation: todaysRateGlow 1.8s ease-in-out infinite;
+}
