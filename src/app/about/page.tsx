@@ -9,6 +9,21 @@ import MainHeader from '@/components/sections/main-header';
 import MainNavigation from '@/components/sections/main-navigation';
 import Footer from '@/components/sections/footer';
 
+const artisans = [
+  {
+    id: 1,
+    image: '/15yearsofexcellence/15yearsofexcellence.webp',
+  },
+  {
+    id: 2,
+    image: '/15yearsofexcellence/15yearsofexcellence0.webp',
+  },
+  {
+    id: 3,
+    image: '/15yearsofexcellence/15yearsofexcellence2.webp',
+  },
+];
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -253,12 +268,18 @@ export default function AboutPage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="text-center">
-                <div className="mb-4 h-48 rounded-lg bg-white/10 flex items-center justify-center">
-                  <div className="text-[#f6e2c7] text-6xl">👑</div>
+            {artisans.map((artisan) => (
+              <div key={artisan.id} className="text-center">
+                <div className="relative mb-4 h-48 rounded-lg overflow-hidden border border-white/20">
+                  <Image
+                    src={artisan.image}
+                    alt={`15 years of excellence ${artisan.id}`}
+                    fill
+                    sizes="300px"
+                    className="object-cover"
+                  />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Master Craftsman</h3>
+                <h3 className="text-xl font-bold mb-2 text-[#f6e2c7]">Master Craftsman</h3>
                 <p className="text-[#f6e2c7]">
                   Specializing in intricate designs with 15+ years of expertise in precious metal work.
                 </p>
