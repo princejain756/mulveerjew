@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 import TopNotificationBar from '@/components/sections/top-notification-bar';
@@ -14,75 +15,67 @@ export default function CollectionsPage() {
       id: 'signature',
       name: 'Signature Collections',
       description: 'Curated timeless pieces that define our brand identity and exceptional craftsmanship.',
-      icon: '👑',
-      color: 'from-purple-600 to-pink-600',
+      icon: '/icons/signature-collections.webp',
       href: '/products?collection=signature'
     },
     {
       id: 'bridal',
       name: 'Bridal Elegance',
       description: 'Complete bridal sets designed to celebrate your special moments with grace and sophistication.',
-      icon: '💍',
-      color: 'from-rose-500 to-pink-500',
+      icon: '/icons/bridal-elegance.webp',
       href: '/products?collection=bridal'
     },
     {
       id: 'everyday',
       name: 'Everyday Elegance',
       description: 'Versatile pieces perfect for daily wear, combining comfort with understated luxury.',
-      icon: '✨',
-      color: 'from-amber-600 to-yellow-500',
+      icon: '/icons/everyday-elegance.webp',
       href: '/products?collection=everyday'
     },
     {
       id: 'ethnic',
       name: 'Ethnic Heritage',
       description: 'Traditional designs celebrating cultural richness and timeless Indian aesthetics.',
-      icon: '🎨',
-      color: 'from-red-600 to-orange-500',
+      icon: '/icons/ethnic-heritage.webp',
       href: '/products?collection=ethnic'
     },
     {
       id: 'minimal',
       name: 'Modern Minimalist',
       description: 'Contemporary designs featuring clean lines and bold statements for the modern woman.',
-      icon: '⚡',
-      color: 'from-gray-700 to-gray-900',
+      icon: '/icons/modern-minimalist.webp',
       href: '/products?collection=minimal'
     },
     {
       id: 'festival',
       name: 'Festival Specials',
       description: 'Stunning pieces for Diwali, celebrations, and special occasions throughout the year.',
-      icon: '🌟',
-      color: 'from-indigo-600 to-blue-600',
+      icon: '/icons/festival-jewelry.webp',
       href: '/products?collection=festival'
     },
     {
       id: 'diamond',
       name: 'Diamond Brilliance',
       description: 'Premium diamond jewelry showcasing exceptional sparkle and investment value.',
-      icon: '💎',
-      color: 'from-cyan-400 to-blue-400',
+      icon: '/icons/iconforge-diamond-brilliance-1764524797236.webp',
       href: '/products?collection=diamond'
     },
     {
       id: 'under99',
       name: 'Treasure Hunt',
       description: 'Amazing pieces starting from just ₹99—beauty and quality within your budget.',
-      icon: '🎁',
-      color: 'from-green-500 to-emerald-500',
+      icon: '/icons/iconforge-treasure-hunt-1764524800686.webp',
       href: '/products?collection=under99'
     }
   ];
 
   const categories = [
-    { name: 'Rings', emoji: '💍', count: '120+' },
-    { name: 'Necklaces', emoji: '👗', count: '85+' },
-    { name: 'Earrings', emoji: '✨', count: '95+' },
-    { name: 'Bracelets', emoji: '⌚', count: '60+' },
-    { name: 'Bangles', emoji: '🔔', count: '75+' },
-    { name: 'Sets', emoji: '👑', count: '45+' }
+    { name: 'Rings', icon: '/icons/rings.webp', count: '120+' },
+    { name: 'Necklaces', icon: '/icons/necklaces.webp', count: '85+' },
+    { name: 'Earrings', icon: '/icons/earrings.webp', count: '95+' },
+    { name: 'Bracelets', icon: '/icons/bracelets.webp', count: '60+' },
+    { name: 'Bangles', icon: '/icons/bangles.webp', count: '75+' },
+    { name: 'Sets', icon: '/icons/sets.webp', count: '45+' }
   ];
 
   return (
@@ -116,8 +109,16 @@ export default function CollectionsPage() {
                 href={collection.href}
                 className="group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all"
               >
-                <div className={`bg-gradient-to-br ${collection.color} h-48 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform`}>
-                  {collection.icon}
+                <div className="h-48 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="relative h-32 w-32">
+                    <Image
+                      src={collection.icon}
+                      alt={`${collection.name} icon`}
+                      fill
+                      sizes="160px"
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
                 <div className="bg-white p-6">
                   <h3 className="text-xl font-bold text-[#3f0d1c] mb-2 group-hover:text-[#5a1024] transition-colors">
@@ -156,7 +157,17 @@ export default function CollectionsPage() {
                 href={`/products?category=${category.name.toLowerCase()}`}
                 className="rounded-lg bg-white p-6 text-center hover:shadow-lg transition-shadow border border-[#e8d7c3] hover:border-[#5a1024]"
               >
-                <div className="text-4xl mb-3">{category.emoji}</div>
+                <div className="flex justify-center mb-3">
+                  <div className="relative h-16 w-16">
+                    <Image
+                      src={category.icon}
+                      alt={`${category.name} icon`}
+                      fill
+                      sizes="64px"
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
                 <h3 className="text-lg font-semibold text-[#3f0d1c] mb-1">
                   {category.name}
                 </h3>
@@ -258,14 +269,41 @@ export default function CollectionsPage() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="rounded-lg border border-[#e8d7c3] overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="aspect-square bg-gradient-to-br from-[#3f0d1c] to-[#5a1024] flex items-center justify-center text-6xl">
-                  💍
+            {[
+              {
+                id: 1,
+                title: 'Design 1',
+                image: '/Designs/bridal-gold-necklace-set-traditional-south-indian-mulveer-jewellers.webp',
+              },
+              {
+                id: 2,
+                title: 'Design 2',
+                image: '/Designs/gold-beaded-necklace-with-jhumka-earrings-mulveer-jewellers.jpg.webp',
+              },
+              {
+                id: 3,
+                title: 'Design 3',
+                image: '/Designs/gold-beaded-necklace-with-ruby-pendant-and-jhumka-earrings-mulveer-jewellers.jpg.webp',
+              },
+              {
+                id: 4,
+                title: 'Design 4',
+                image: '/Designs/south-indian-bridal-gold-jewellery-set-mulveer-jewellers.jpg.webp',
+              },
+            ].map((design) => (
+              <div key={design.id} className="rounded-lg border border-[#e8d7c3] overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="relative w-full h-[320px] bg-white flex items-center justify-center">
+                  <Image
+                    src={design.image}
+                    alt={design.title}
+                    fill
+                    sizes="320px"
+                    className="object-contain"
+                  />
                 </div>
                 <div className="p-4">
                   <p className="text-xs text-[#5a1024] font-semibold mb-2">NEW</p>
-                  <h3 className="font-semibold text-[#3f0d1c]">Design {i}</h3>
+                  <h3 className="font-semibold text-[#3f0d1c]">{design.title}</h3>
                   <p className="text-sm text-gray-600 mt-1">Exquisite piece</p>
                 </div>
               </div>

@@ -63,32 +63,32 @@ export default function CustomDesignsPage() {
 
   const designCategories = [
     {
-      icon: "💍",
+      icon: "/icons/engagement-rings.webp",
       title: "Engagement Rings",
       description: "Create the perfect symbol of your love with a custom engagement ring designed just for your story."
     },
     {
-      icon: "👰",
+      icon: "/icons/bridal-collections.webp",
       title: "Bridal Collections",
       description: "Complete bridal sets featuring coordinated necklace, earrings, and bangles for your special day."
     },
     {
-      icon: "✨",
+      icon: "/icons/festival-jewelry.webp",
       title: "Festival Jewelry",
       description: "Stunning pieces for Diwali, weddings, and celebrations that capture the essence of tradition."
     },
     {
-      icon: "💎",
+      icon: "/icons/heirloom-recreation.webp",
       title: "Heirloom Recreation",
       description: "Recreate precious family heirlooms with the same beauty, weight, and significance."
     },
     {
-      icon: "🎨",
+      icon: "/icons/contemporary-art.webp",
       title: "Contemporary Art",
       description: "Modern, bold designs that make a statement and showcase your unique personal style."
     },
     {
-      icon: "👑",
+      icon: "/icons/statement-pieces.webp",
       title: "Statement Pieces",
       description: "One-of-a-kind showstopper jewelry that becomes a treasured conversation piece."
     }
@@ -240,7 +240,17 @@ export default function CustomDesignsPage() {
                 key={index}
                 className="rounded-lg border border-[#e8d7c3] p-8 hover:shadow-lg transition-all hover:border-[#5a1024]"
               >
-                <div className="text-5xl mb-4">{category.icon}</div>
+                <div className="flex justify-center mb-4">
+                  <div className="relative h-20 w-20">
+                    <Image
+                      src={category.icon}
+                      alt={`${category.title} icon`}
+                      fill
+                      sizes="80px"
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
                 <h3 className="text-xl font-bold text-[#3f0d1c] mb-3">{category.title}</h3>
                 <p className="text-gray-600">{category.description}</p>
               </div>
@@ -321,8 +331,16 @@ export default function CustomDesignsPage() {
                 </li>
               </ul>
             </div>
-            <div className="rounded-lg bg-gradient-to-br from-[#3f0d1c] to-[#5a1024] h-96 flex items-center justify-center text-white text-6xl">
-              💎
+            <div className="rounded-lg bg-gradient-to-br from-[#3f0d1c] to-[#5a1024] h-96 flex items-center justify-center text-white">
+              <div className="relative h-48 w-48">
+                <Image
+                  src="/icons/iconforge-diamond-brilliance-1764524797236.webp"
+                  alt="Diamond brilliance icon"
+                  fill
+                  sizes="192px"
+                  className="object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
