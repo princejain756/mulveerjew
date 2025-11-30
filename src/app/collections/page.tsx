@@ -192,13 +192,25 @@ export default function CollectionsPage() {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {[
+              {
+                name: '24K Gold',
+                purity: '99.99%',
+                description: 'Purest form of gold—ideal for sacred pieces and investment-worthy heirlooms.',
+                color: '#f4c430'
+              },
               {
                 name: '22K Gold',
                 purity: '91.67%',
                 description: 'Our signature collection featuring the finest 22K gold, perfect for daily wear and special occasions.',
                 color: '#D4AF37'
+              },
+              {
+                name: '20K Gold',
+                purity: '83.33%',
+                description: 'Balanced purity for ornate designs that still enjoy excellent durability.',
+                color: '#d1a54b'
               },
               {
                 name: '18K Gold',
