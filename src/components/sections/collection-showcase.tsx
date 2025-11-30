@@ -4,7 +4,7 @@ const collections = [
   {
     name: "Gold Jewellery",
     href: "/products?category=gold",
-    badge: "22K & 20K",
+    badge: "24K, 22K, 20K & 18K",
     description: "Temple, bridal & everyday gold designs crafted with purity.",
   },
   {
