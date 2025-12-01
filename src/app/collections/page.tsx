@@ -1,13 +1,103 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import TopNotificationBar from '@/components/sections/top-notification-bar';
 import HeaderTopInfo from '@/components/sections/header-top-info';
 import MainHeader from '@/components/sections/main-header';
 import MainNavigation from '@/components/sections/main-navigation';
 import Footer from '@/components/sections/footer';
+
+type LatestDesign = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  highlights: string[];
+  images: string[];
+};
+
+const DesignShowcaseCard = ({ design }: { design: LatestDesign }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const totalImages = design.images.length;
+
+  const goToSlide = (direction: 'next' | 'prev') => {
+    setActiveIndex((prev) => {
+      if (direction === 'next') {
+        return (prev + 1) % totalImages;
+      }
+      return (prev - 1 + totalImages) % totalImages;
+    });
+  };
+
+  return (
+    <div className="flex flex-col rounded-2xl border border-[#e8d7c3] bg-white shadow-sm hover:shadow-xl transition-shadow">
+      <div className="relative h-[360px] overflow-hidden rounded-t-2xl bg-[#fdf8f3]">
+        <Image
+          key={design.images[activeIndex]}
+          src={design.images[activeIndex]}
+          alt={`${design.title} view ${activeIndex + 1}`}
+          fill
+          className="object-contain transition-opacity duration-300"
+          sizes="(min-width: 1024px) 320px, 100vw"
+        />
+        {totalImages > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() => goToSlide('prev')}
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-[#3f0d1c] shadow hover:bg-white"
+              aria-label="Previous view"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => goToSlide('next')}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-[#3f0d1c] shadow hover:bg-white"
+              aria-label="Next view"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {design.images.map((_, index) => (
+                <button
+                  key={`${design.id}-dot-${index}`}
+                  type="button"
+                  aria-label={`Show view ${index + 1}`}
+                  onClick={() => setActiveIndex(index)}
+                  className={`h-2 w-8 rounded-full transition-all ${
+                    activeIndex === index ? 'bg-[#5a1024]' : 'bg-white/60'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        <div className="absolute top-4 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#5a1024]">
+          {activeIndex + 1} / {totalImages}
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col gap-4 p-6">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-[#a55a35]">{design.subtitle}</p>
+          <h3 className="text-2xl font-semibold text-[#3f0d1c]">{design.title}</h3>
+          <p className="mt-2 text-sm text-gray-600">{design.description}</p>
+        </div>
+        <ul className="space-y-2">
+          {design.highlights.map((highlight) => (
+            <li key={`${design.id}-${highlight}`} className="flex items-center gap-2 text-sm text-[#3f0d1c]">
+              <span className="h-2 w-2 rounded-full bg-[#f4c430]" />
+              {highlight}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 export default function CollectionsPage() {
   const collections = [
@@ -76,6 +166,56 @@ export default function CollectionsPage() {
     { name: 'Bracelets', icon: '/icons/bracelets.webp', count: '60+' },
     { name: 'Bangles', icon: '/icons/bangles.webp', count: '75+' },
     { name: 'Sets', icon: '/icons/sets.webp', count: '45+' }
+  ];
+
+  const latestDesigns: LatestDesign[] = [
+    {
+      id: 'design-1',
+      title: 'Design 1',
+      subtitle: 'Signature Ensemble',
+      description: 'Our flagship bridal suite showcasing the finest craftsmanship from the Mulveer studio.',
+      highlights: [
+        'Complete look with layered necklaces & earrings',
+        'Warm antique finish to complement silk sarees',
+        'Includes matching bangles and hair accessories'
+      ],
+      images: [
+        '/Designs/bridal-gold-necklace-set-traditional-south-indian-mulveer-jewellers.webp',
+        '/Designs/gold-beaded-necklace-with-jhumka-earrings-mulveer-jewellers.jpg.webp',
+        '/Designs/gold-beaded-necklace-with-ruby-pendant-and-jhumka-earrings-mulveer-jewellers.jpg.webp',
+        '/Designs/south-indian-bridal-gold-jewellery-set-mulveer-jewellers.jpg.webp'
+      ]
+    },
+    {
+      id: 'design-2',
+      title: 'Design 2',
+      subtitle: 'Temple Classic',
+      description: 'A regal haaram captured from multiple angles to highlight every handcrafted bead.',
+      highlights: [
+        'Two curated angles for buyers to inspect details',
+        'Perfect drape length for traditional occasions',
+        'Pair with bold jhumkas for symmetry'
+      ],
+      images: [
+        '/collections/gold/1.webp',
+        '/collections/gold/2.webp'
+      ]
+    },
+    {
+      id: 'design-3',
+      title: 'Design 3',
+      subtitle: 'Ruby Heritage',
+      description: 'Minimalist collar that still delivers drama through ruby-inspired pendants.',
+      highlights: [
+        'Balanced collar fit keeps it comfortable all day',
+        'Detailed close-up views for online shoppers',
+        'Subtle matte-gold finish keeps spotlight on the ruby'
+      ],
+      images: [
+        '/collections/gold/3.webp',
+        '/collections/gold/4.webp'
+      ]
+    }
   ];
 
   return (
@@ -280,45 +420,9 @@ export default function CollectionsPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
-            {[
-              {
-                id: 1,
-                title: 'Design 1',
-                image: '/Designs/bridal-gold-necklace-set-traditional-south-indian-mulveer-jewellers.webp',
-              },
-              {
-                id: 2,
-                title: 'Design 2',
-                image: '/Designs/gold-beaded-necklace-with-jhumka-earrings-mulveer-jewellers.jpg.webp',
-              },
-              {
-                id: 3,
-                title: 'Design 3',
-                image: '/Designs/gold-beaded-necklace-with-ruby-pendant-and-jhumka-earrings-mulveer-jewellers.jpg.webp',
-              },
-              {
-                id: 4,
-                title: 'Design 4',
-                image: '/Designs/south-indian-bridal-gold-jewellery-set-mulveer-jewellers.jpg.webp',
-              },
-            ].map((design) => (
-              <div key={design.id} className="rounded-lg border border-[#e8d7c3] overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative w-full h-[320px] bg-white flex items-center justify-center">
-                  <Image
-                    src={design.image}
-                    alt={design.title}
-                    fill
-                    sizes="320px"
-                    className="object-contain"
-                  />
-                </div>
-                <div className="p-4">
-                  <p className="text-xs text-[#5a1024] font-semibold mb-2">NEW</p>
-                  <h3 className="font-semibold text-[#3f0d1c]">{design.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">Exquisite piece</p>
-                </div>
-              </div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {latestDesigns.map((design) => (
+              <DesignShowcaseCard key={design.id} design={design} />
             ))}
           </div>
         </div>
