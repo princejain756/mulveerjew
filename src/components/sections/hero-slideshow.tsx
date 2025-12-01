@@ -12,10 +12,10 @@ const slides = [
     alt: "Mulveer Jewellers Hero Banner"
   },
   {
-    desktopImage: "/heroimage2.webp",
-    mobileImage: "/heroimage2.webp",
+    desktopImage: "/mulverhero.webp",
+    mobileImage: "/mulveerheromobile.webp",
     href: "/products",
-    alt: "Mulveer Jewellers alternative hero image"
+    alt: "Mulveer Jewellers Hero Banner"
   },
   {
     desktopImage: "/mulverhero.webp",
