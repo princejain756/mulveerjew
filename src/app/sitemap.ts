@@ -14,7 +14,7 @@ const staticPaths = [
   "/privacy-policy",
   "/refund-policy",
   "/shipping-policy",
-  "/terms-of-service",
+  "/policies/terms",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
