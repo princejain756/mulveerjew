@@ -173,26 +173,39 @@ export default function CollectionsPage() {
       id: 'design-1',
       title: 'Design 1',
       subtitle: 'Signature Ensemble',
-      description: 'Our flagship bridal suite showcasing the finest craftsmanship from the Mulveer studio.',
+      description: 'Paired bridal sets featuring ornate gold layering for statement entrances.',
       highlights: [
-        'Complete look with layered necklaces & earrings',
-        'Warm antique finish to complement silk sarees',
-        'Includes matching bangles and hair accessories'
+        'Includes Haaram & Choker combinations',
+        'Balanced to sit beautifully on silk sarees',
+        'Detailed motifs showcased from two angles'
       ],
       images: [
         '/Designs/bridal-gold-necklace-set-traditional-south-indian-mulveer-jewellers.webp',
-        '/Designs/gold-beaded-necklace-with-jhumka-earrings-mulveer-jewellers.jpg.webp',
-        '/Designs/gold-beaded-necklace-with-ruby-pendant-and-jhumka-earrings-mulveer-jewellers.jpg.webp',
         '/Designs/south-indian-bridal-gold-jewellery-set-mulveer-jewellers.jpg.webp'
       ]
     },
     {
       id: 'design-2',
       title: 'Design 2',
-      subtitle: 'Temple Classic',
-      description: 'A regal haaram captured from multiple angles to highlight every handcrafted bead.',
+      subtitle: 'Gold Beaded Elegance',
+      description: 'Two perspectives of the same handcrafted beaded set to highlight the ruby drop detail.',
       highlights: [
-        'Two curated angles for buyers to inspect details',
+        'Matching jhumkas complete the look',
+        'Polished finish keeps beads luminous',
+        'Ruby pendant brings colour pop'
+      ],
+      images: [
+        '/Designs/gold-beaded-necklace-with-jhumka-earrings-mulveer-jewellers.jpg.webp',
+        '/Designs/gold-beaded-necklace-with-ruby-pendant-and-jhumka-earrings-mulveer-jewellers.jpg.webp'
+      ]
+    },
+    {
+      id: 'design-3',
+      title: 'Design 3',
+      subtitle: 'Temple Classic',
+      description: 'Rich-toned haaram captured from the new collection for close-up inspection.',
+      highlights: [
+        'Two curated angles showing beadwork',
         'Perfect drape length for traditional occasions',
         'Pair with bold jhumkas for symmetry'
       ],
@@ -202,8 +215,8 @@ export default function CollectionsPage() {
       ]
     },
     {
-      id: 'design-3',
-      title: 'Design 3',
+      id: 'design-4',
+      title: 'Design 4',
       subtitle: 'Ruby Heritage',
       description: 'Minimalist collar that still delivers drama through ruby-inspired pendants.',
       highlights: [
@@ -420,7 +433,7 @@ export default function CollectionsPage() {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {latestDesigns.map((design) => (
               <DesignShowcaseCard key={design.id} design={design} />
             ))}
