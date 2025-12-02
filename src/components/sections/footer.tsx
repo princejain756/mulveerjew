@@ -12,6 +12,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><Link href="/about" className="text-[15px] text-white hover:text-[#d4af37] transition-colors">About Mulveer</Link></li>
               <li><Link href="/contact" className="text-[15px] text-white hover:text-[#d4af37] transition-colors">Contact & Store Timings</Link></li>
+              <li><Link href="/blog" className="text-[15px] text-white hover:text-[#d4af37] transition-colors">Blog & Guides</Link></li>
               <li><Link href="/orders" className="text-[15px] text-white hover:text-[#d4af37] transition-colors">Order History</Link></li>
               <li><Link href="/faq" className="text-[15px] text-white hover:text-[#d4af37] transition-colors">FAQ</Link></li>
               <li><Link href="/policies/terms" className="text-[15px] text-white hover:text-[#d4af37] transition-colors">Terms & Conditions</Link></li>
