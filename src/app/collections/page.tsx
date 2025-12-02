@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Sparkles, ChevronLeft, ChevronRight, MessageCircle, X } from 'lucide-react';
 import TopNotificationBar from '@/components/sections/top-notification-bar';
 import HeaderTopInfo from '@/components/sections/header-top-info';
 import MainHeader from '@/components/sections/main-header';
@@ -159,6 +159,10 @@ export default function CollectionsPage() {
     }
   ];
 
+  const [activeCollection, setActiveCollection] = useState<(typeof collections)[number] | null>(null);
+  const [activeCategory, setActiveCategory] = useState<{ name: string; icon: string } | null>(null);
+  const whatsappBase = 'https://wa.me/917204456583';
+
   const categories = [
     { name: 'Rings', icon: '/icons/rings.webp', count: '120+' },
     { name: 'Necklaces', icon: '/icons/necklaces.webp', count: '85+' },
@@ -257,10 +261,12 @@ export default function CollectionsPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {collections.map((collection) => (
-              <Link
+              <button
                 key={collection.id}
-                href={collection.href}
-                className="group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all"
+                type="button"
+                onClick={() => setActiveCollection(collection)}
+                className="group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all bg-white text-left focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2"
+                aria-label={`${collection.name} coming soon, tap to WhatsApp`}
               >
                 <div className="h-48 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <div className="relative h-32 w-32">
@@ -281,11 +287,11 @@ export default function CollectionsPage() {
                     {collection.description}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-[#5a1024] font-semibold group-hover:gap-3 transition-all">
-                    <span>Explore</span>
+                    <span>Coming Soon</span>
                     <span>→</span>
                   </div>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
         </div>
@@ -305,10 +311,12 @@ export default function CollectionsPage() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
             {categories.map((category) => (
-              <Link
+              <button
                 key={category.name}
-                href={`/products?category=${category.name.toLowerCase()}`}
-                className="rounded-lg bg-white p-6 text-center hover:shadow-lg transition-shadow border border-[#e8d7c3] hover:border-[#5a1024]"
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className="rounded-lg bg-white p-6 text-center hover:shadow-lg transition-shadow border border-[#e8d7c3] hover:border-[#5a1024] focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2"
+                aria-label={`${category.name} coming soon, tap to WhatsApp`}
               >
                 <div className="flex justify-center mb-3">
                   <div className="relative h-16 w-16">
@@ -324,10 +332,8 @@ export default function CollectionsPage() {
                 <h3 className="text-lg font-semibold text-[#3f0d1c] mb-1">
                   {category.name}
                 </h3>
-                <p className="text-sm text-[#5a1024] font-semibold">
-                  {category.count} items
-                </p>
-              </Link>
+                <p className="text-sm text-[#5a1024] font-semibold">Coming Soon</p>
+              </button>
             ))}
           </div>
         </div>
@@ -459,6 +465,104 @@ export default function CollectionsPage() {
         </div>
       </section>
       </main>
+      {activeCollection && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="relative w-full max-w-2xl rounded-2xl border border-[#e8d7c3] bg-white p-6 sm:p-8 shadow-2xl">
+            <button
+              aria-label="Close dialog"
+              onClick={() => setActiveCollection(null)}
+              className="absolute right-4 top-4 rounded-full bg-[#f9f5f0] p-2 text-[#3f0d1c] hover:bg-[#f1e5d8] focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+            >
+              <X size={18} />
+            </button>
+            <div className="inline-flex items-center rounded-full bg-[#f6e2c7] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5a1024]">
+              Coming Soon
+            </div>
+            <h3 className="mt-4 text-3xl font-bold text-[#3f0d1c]">
+              {activeCollection.name}
+            </h3>
+            <p className="mt-3 text-base text-gray-700 leading-relaxed">
+              {activeCollection.description} — this collection is about to launch. Chat with our Belagavi stylist to preview designs, pre-book pieces, or reserve launch offers before the drop.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <a
+                href={`${whatsappBase}?text=${encodeURIComponent(
+                  `Hi Mulveer team, I want to explore the ${activeCollection.name} collection. Please share options, pricing, and launch dates.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3 text-white font-semibold shadow-sm transition hover:bg-[#1ebe5a] focus:outline-none focus:ring-2 focus:ring-[#1ebe5a] focus:ring-offset-2 focus:ring-offset-white"
+              >
+                <MessageCircle size={18} />
+                WhatsApp a Stylist
+              </a>
+              <button
+                type="button"
+                onClick={() => setActiveCollection(null)}
+                className="inline-flex items-center justify-center rounded-lg border border-[#5a1024] px-4 py-3 text-[#5a1024] font-semibold transition hover:bg-[#5a1024] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#5a1024] focus:ring-offset-2 focus:ring-offset-white"
+              >
+                Close
+              </button>
+            </div>
+            <p className="mt-4 text-sm text-gray-600">
+              Prefer a call? Dial{' '}
+              <a href="tel:+917204456583" className="font-semibold text-[#5a1024] hover:underline">
+                +91 7204456583
+              </a>{' '}
+              and mention “{activeCollection.name} launch”.
+            </p>
+          </div>
+        </div>
+      )}
+      {activeCategory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="relative w-full max-w-xl rounded-2xl border border-[#e8d7c3] bg-white p-6 sm:p-8 shadow-2xl">
+            <button
+              aria-label="Close dialog"
+              onClick={() => setActiveCategory(null)}
+              className="absolute right-4 top-4 rounded-full bg-[#f9f5f0] p-2 text-[#3f0d1c] hover:bg-[#f1e5d8] focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+            >
+              <X size={18} />
+            </button>
+            <div className="inline-flex items-center rounded-full bg-[#f6e2c7] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5a1024]">
+              Coming Soon
+            </div>
+            <h3 className="mt-4 text-3xl font-bold text-[#3f0d1c]">
+              {activeCategory.name}
+            </h3>
+            <p className="mt-3 text-base text-gray-700 leading-relaxed">
+              This category is about to launch online. Chat with a stylist to see available designs, reserve pieces, or request previews before we publish.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <a
+                href={`${whatsappBase}?text=${encodeURIComponent(
+                  `Hi Mulveer team, I'm interested in the ${activeCategory.name} category. Please share options and prices.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3 text-white font-semibold shadow-sm transition hover:bg-[#1ebe5a] focus:outline-none focus:ring-2 focus:ring-[#1ebe5a] focus:ring-offset-2 focus:ring-offset-white"
+              >
+                <MessageCircle size={18} />
+                WhatsApp a Stylist
+              </a>
+              <button
+                type="button"
+                onClick={() => setActiveCategory(null)}
+                className="inline-flex items-center justify-center rounded-lg border border-[#5a1024] px-4 py-3 text-[#5a1024] font-semibold transition hover:bg-[#5a1024] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#5a1024] focus:ring-offset-2 focus:ring-offset-white"
+              >
+                Close
+              </button>
+            </div>
+            <p className="mt-4 text-sm text-gray-600">
+              Prefer a call? Dial{' '}
+              <a href="tel:+917204456583" className="font-semibold text-[#5a1024] hover:underline">
+                +91 7204456583
+              </a>{' '}
+              and mention “{activeCategory.name} launch”.
+            </p>
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   );
