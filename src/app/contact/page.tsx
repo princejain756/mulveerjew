@@ -20,48 +20,6 @@ export default function ContactPage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitStatus('loading');
-    setErrorMessage('');
-
-    try {
-      const response = await fetch('/api/enquiry', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: '',
-        });
-        setTimeout(() => setSubmitStatus('idle'), 3000);
-      } else {
-        setSubmitStatus('error');
-        setErrorMessage('Failed to send enquiry. Please try again.');
-      }
-    } catch (error) {
-      setSubmitStatus('error');
-      setErrorMessage('An error occurred. Please try again later.');
-    }
-  };
-
   const storeInfo = {
     name: 'Mulveer Jewellers',
     address: 'Jamboti Road, Piranwadi, Belagavi, Karnataka, PIN - 590011',
@@ -71,6 +29,59 @@ export default function ContactPage() {
     mapEmbedUrl:
       'https://www.google.com/maps?q=Mulveer+Jewellers,+Jamboti+Road,+Piranwadi,+Belagavi,+Karnataka+590011&output=embed',
     timings: 'Daily, 10:00 AM – 9:00 PM',
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitStatus('loading');
+    setErrorMessage('');
+
+    try {
+      const { name, email, phone, subject, message } = formData;
+      const formattedLines = [
+        'Namaste Mulveer Jewellers,',
+        '',
+        '*New Website Enquiry*',
+        `Full Name: ${name}`,
+        `Email: ${email}`,
+        `Phone: ${phone || 'Not provided'}`,
+        `Subject: ${subject}`,
+        '',
+        'Message:',
+        message,
+        '',
+        '— Sent from mulveerjewellers.com',
+      ];
+
+      const whatsappText = encodeURIComponent(formattedLines.join('\n'));
+      const whatsappNumber = storeInfo.whatsapp.replace(/[^0-9]/g, '');
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappText}`;
+
+      if (typeof window !== 'undefined') {
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      }
+
+      setSubmitStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      });
+      setTimeout(() => setSubmitStatus('idle'), 4000);
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrorMessage('Unable to open WhatsApp. Please try again.');
+    }
   };
 
   return (
@@ -193,7 +204,9 @@ export default function ContactPage() {
                   <AlertCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-green-800">Success!</p>
-                    <p className="text-sm text-green-700">Your enquiry has been sent. We'll contact you soon.</p>
+                    <p className="text-sm text-green-700">
+                      WhatsApp has opened with your enquiry beautifully formatted—just tap send to reach us instantly.
+                    </p>
                   </div>
                 </div>
               )}
@@ -299,8 +312,12 @@ export default function ContactPage() {
                   disabled={submitStatus === 'loading'}
                   className="w-full bg-[#5a1024] text-white font-semibold py-3 rounded-lg hover:bg-[#711533] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                  {submitStatus === 'loading' ? 'Sending...' : 'Send Enquiry'}
+                  {submitStatus === 'loading' ? 'Preparing WhatsApp...' : 'Send via WhatsApp'}
                 </button>
+
+                <p className="text-xs text-gray-500 text-center">
+                  A new WhatsApp chat opens with all details filled in for your review.
+                </p>
               </form>
 
               <p className="mt-4 text-xs text-gray-500 text-center">
